@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TUS</title>
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@200;400&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <h3>Parada de autobuses</h3>
+    <div id="uni">
+        <h2><b>PCTCAN</b></h2>
+            <div class="bus">
+                <div class="line">
+                    <img src="ruta_1.png" alt="" />
+                    <p>A. Odriozola</p>
+                </div>
+                <div class="estimations">
+                    <span id="uni_prox" class="blue"></span>
+                    <span id="uni_sig"></span>
+                </div>
+            </div>
+    </div>
+
+    <div id="resi">
+        <div id="block_one" class="bloque">
+            <h2><b>PCTCAN 1</b></h2>
+            <div class="bus">
+                <div class="line">
+                    <img src="ruta_1.png" alt="" />
+                    <p>A. Odriozola</p>
+                </div>
+                <div class="estimations">
+                    <span id="unoresi_prox" class="blue"></span>
+                    <span id="unoresi_sig"></span>
+                </div>
+            </div>
+            <hr />
+            <br>
+            <div class="bus">
+                <div class="line">
+                    <img src="ruta_13.png" alt="" />
+                    <p>Cueto</p>
+                </div>
+                <div class="estimations">
+                    <span id="resi13_prox" class="blue"></span>
+                    <span id="resi13_sig"></span>
+                </div>
+            </div>
+        </div>
+
+        <div id="block_two" class="bloque">
+            <h2><b>PCTCAN 2</b></h2>
+            <div class="bus">
+                <div class="line">
+                    <img src="ruta_24C1.png" alt="" />
+                    <p>Estaciones</p>
+                </div>
+                <div class="estimations">
+                    <span id="resi24c1_prox" class="blue"></span>
+                    <span id="resi24c1_sig"></span>
+                </div>
+            </div>
+            <hr />
+            <br>
+            <div class="bus">
+                <div class="line">
+                    <img src="ruta_24C2.png" alt="" />
+                    <p>PCTCAN</p>
+                </div>
+                <div class="estimations">
+                    <span id="resi24c2_prox" class="blue"></span>
+                    <span id="resi24c2_sig"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        const params = Object.fromEntries(urlSearchParams.entries());
+
+        if (params.resi === "1") {
+            document.getElementById("uni").style.display = "none";
+        } else {
+            document.getElementById("resi").style.display = "none";
+        }
+
+        fetch('https://tusantapi.ctdesarrollo-sdr.org/TUS/busInfo')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                if (params.resi === "1") {
+                    document.getElementById("unoresi_prox").innerText = data.residencia.one[0].estimado.value;
+                    document.getElementById("unoresi_sig").innerText = data.residencia.one[1].estimado.value;
+                    document.getElementById("resi13_prox").innerText = data.residencia.thirteen[0].estimado.value;
+                    document.getElementById("resi13_sig").innerText = data.residencia.thirteen[1].estimado.value;
+                    document.getElementById("resi24c1_prox").innerText = data.residencia.twenty_four_c_one[0].estimado.value;
+                    document.getElementById("resi24c1_sig").innerText = data.residencia.twenty_four_c_one[1].estimado.value;
+                    document.getElementById("resi24c2_prox").innerText = data.residencia.twenty_four_c_two[0].estimado.value;
+                    document.getElementById("resi24c2_sig").innerText = data.residencia.twenty_four_c_two[1].estimado.value;
+                } else {
+                    document.getElementById("uni_prox").innerText = data.universidad[0].estimado.value;
+                    document.getElementById("uni_sig").innerText = data.universidad[1].estimado.value;
+                }
+            });
+
+        // Obtenemos una referencia a los bloques
+        const bloque1 = document.getElementById("block_one");
+        const bloque2 = document.getElementById("block_two");
+
+        // Mostramos el primer bloque
+        bloque1.style.display = "block";
+
+        // Variable para controlar el bloque actual
+        let bloqueActual = bloque1;
+
+        // Función para cambiar entre los bloques
+        function cambiarBloque() {
+        if (bloqueActual === bloque1) {
+            bloque1.style.display = "none";
+            bloque2.style.display = "block";
+            bloqueActual = bloque2;
+        } else {
+            bloque2.style.display = "none";
+            bloque1.style.display = "block";
+            bloqueActual = bloque1;
+        }
+        }
+
+        // Ejecutamos la función cada 30 segundos en un bucle continuo
+        setInterval(cambiarBloque, 15 * 1000); // 30 segundos en milisegundos
+    </script>
+</body>
+
+</html>
