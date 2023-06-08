@@ -1,0 +1,16 @@
+ZABBIX ---------------------- Admin
+
+username: Admin
+password: zabbix
+
+
+ZABBIX ---------------------- RESIDENCIA
+
+username: Resi_tv
+password: #Xwkvr7$11!8
+
+
+ZABBIX ---------------------- UNIVERSIDAD
+
+username: Uneat_tv
+password: 17n&P*u8s$Zt
